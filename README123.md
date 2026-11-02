@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CloudDocs - Flask + Amazon S3 document portal
 
 ## Features
@@ -83,3 +84,6 @@ For production, run Gunicorn under systemd and put Nginx in front with HTTPS. Do
 - Bucket Block Public Access should remain enabled.
 - Upload limit is 16 MB; adjust `MAX_CONTENT_LENGTH` if needed.
 - For production, use HTTPS, secure cookies, a strong secret, backups, monitoring, and consider malware scanning and stricter content validation.
+=======
+# S3-RDS-EC2-Flask_app-host-_via-gunicorn
+>>>>>>> 9bdc645695397f109a327cb62252ce80db80061d
