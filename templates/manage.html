@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Manage files | CloudDocs{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <span class="eyebrow">YOUR PRIVATE STORAGE</span><h1>Manage documents</h1>
+  <p>Files uploaded here are sent to your configured Amazon S3 bucket.</p>
+</section>
+<section class="card upload-card">
+  <h2>Upload a file</h2>
+  <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data" class="upload-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="file" name="file" accept=".pdf,.doc,.docx,.txt,.rtf,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp" required>
+    <button class="primary-btn" type="submit">Upload to S3</button>
+  </form>
+  <p class="hint">Allowed: PDF, Office documents, TXT and common images. Maximum 16 MB per file.</p>
+</section>
+<section class="card">
+  <div class="section-title"><h2>Your files</h2><span class="muted">{{ files|length }} file(s)</span></div>
+  <form method="get" action="{{ url_for('manage') }}" class="filters">
+    <input type="search" name="q" value="{{ query }}" placeholder="Search file name">
+    <select name="type">
+      <option value="">All types</option>
+      <option value="image" {% if file_type == 'image' %}selected{% endif %}>Images</option>
+      <option value="document" {% if file_type == 'document' %}selected{% endif %}>Documents</option>
+    </select>
+    <button class="secondary-btn" type="submit">Filter</button>
+    <a class="clear-link" href="{{ url_for('manage') }}">Clear</a>
+  </form>
+  {% if files %}
+  <div class="table-wrap"><table><thead><tr><th>File name</th><th>Type</th><th>Size</th><th>Uploaded</th><th>Actions</th></tr></thead><tbody>
+  {% for file in files %}
+  <tr>
+    <td>{{ file.original_name }}</td>
+    <td>{{ file.content_type or 'Unknown' }}</td>
+    <td>{{ "%.2f"|format(file.size_bytes / 1048576) }} MB</td>
+    <td>{{ file.uploaded_at }}</td>
+    <td class="actions">
+      {% if (file.content_type or '').startswith('image/') or file.content_type == 'application/pdf' %}
+      <a href="{{ url_for('preview_file', file_id=file.id) }}" target="_blank" rel="noopener">Preview</a>
+      {% endif %}
+      <a href="{{ url_for('download_file', file_id=file.id) }}">Download</a>
+      <form method="post" action="{{ url_for('delete_file', file_id=file.id) }}" onsubmit="return confirm('Permanently delete this file from S3?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="danger-link" type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody></table></div>
+  {% else %}<p class="muted empty-state">No files found. Upload your first document above.</p>{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | CloudDocs{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <span class="eyebrow">CLIENT DASHBOARD</span>
+  <h1>Welcome, {{ user.first_name }}!</h1>
+  <p>Manage your documents and data from one place.</p>
+</section>
+<section class="stats-grid">
+  <article class="stat-card"><span>Total files</span><strong>{{ stats.file_count }}</strong></article>
+  <article class="stat-card"><span>Total storage used</span><strong>{{ "%.2f"|format(stats.total_bytes / 1048576) }} MB</strong></article>
+</section>
+<section class="card manage-callout">
+  <div><h2>Manage your documents</h2><p>Upload new files or access the documents already stored in your S3 bucket.</p></div>
+  <a class="primary-btn" href="{{ url_for('manage') }}">Manage files →</a>
+</section>
+<section class="card">
+  <div class="section-title"><h2>Recent uploads</h2><a href="{{ url_for('manage') }}">View all</a></div>
+  {% if recent_files %}
+  <div class="table-wrap"><table><thead><tr><th>File</th><th>Size</th><th>Uploaded</th></tr></thead><tbody>
+  {% for file in recent_files %}
+  <tr><td>{{ file.original_name }}</td><td>{{ "%.2f"|format(file.size_bytes / 1048576) }} MB</td><td>{{ file.uploaded_at }}</td></tr>
+  {% endfor %}
+  </tbody></table></div>
+  {% else %}<p class="muted">No files uploaded yet.</p>{% endif %}
+</section>
+{% endblock %}

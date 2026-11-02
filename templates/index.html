@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}CloudDocs | Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <span class="eyebrow">YOUR FILES. YOUR CLOUD.</span>
+    <h1>Manage your documents<br>from one simple place.</h1>
+    <p>Upload, organize, preview and download your files with secure cloud storage.</p>
+    <button class="primary-btn" data-open-modal="login">Get Started</button>
+  </div>
+  <div class="hero-art">☁️<span>Secure cloud storage</span></div>
+</section>
+<section id="about" class="feature-grid">
+  <article class="card"><h3>☁ Cloud storage</h3><p>Your uploaded files are stored in your private Amazon S3 bucket.</p></article>
+  <article class="card"><h3>🔐 Private accounts</h3><p>Each account can manage only its own documents.</p></article>
+  <article class="card"><h3>📁 Easy management</h3><p>Upload, search, preview, download and delete files.</p></article>
+</section>
+
+<div class="modal-backdrop" id="authModal" aria-hidden="true">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" type="button" aria-label="Close">&times;</button>
+    <div id="loginPanel">
+      <span class="eyebrow">WELCOME BACK</span><h2 id="modalTitle">Login to CloudDocs</h2>
+      <form method="post" action="{{ url_for('login') }}" class="form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Email address<input type="email" name="email" required autocomplete="email"></label>
+        <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+        <button class="primary-btn full" type="submit">Login</button>
+      </form>
+      <p class="switch-text">No account? <button type="button" class="text-btn" data-show-register>Register</button></p>
+    </div>
+    <div id="registerPanel" hidden>
+      <span class="eyebrow">CREATE YOUR ACCOUNT</span><h2>Register</h2>
+      <form method="post" action="{{ url_for('register') }}" class="form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="two-col">
+          <label>First name<input name="first_name" maxlength="80" required></label>
+          <label>Last name<input name="last_name" maxlength="80" required></label>
+        </div>
+        <label>Email address<input type="email" name="email" required autocomplete="email"></label>
+        <label>Password<input type="password" name="password" minlength="8" required autocomplete="new-password"></label>
+        <label>Confirm password<input type="password" name="confirm_password" minlength="8" required autocomplete="new-password"></label>
+        <button class="primary-btn full" type="submit">Create account</button>
+      </form>
+      <p class="switch-text">Already have an account? <button type="button" class="text-btn" data-show-login>Login</button></p>
+    </div>
+  </section>
+</div>
+{% endblock %}
